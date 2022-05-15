@@ -109,7 +109,7 @@ function startSession(event) {
     .then(response => response.json())
     .then(user => {
         if (user.error) {
-            displayError(user)
+            displayError(user.message)
         } else {
             userHeldInState = user
             const favLink = document.getElementById('favorites')
