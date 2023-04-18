@@ -3,7 +3,7 @@ require 'json'
 
 class CirculatorController < ApplicationController
     AGENCY = 'dc-circulator'
-    CACHE = Redis.current
+    CACHE = $redis
     PREDICTION_URL = 'http://webservices.nextbus.com/service/publicXMLFeed'
 
     def bus_stops
