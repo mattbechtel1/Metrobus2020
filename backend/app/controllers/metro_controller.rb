@@ -28,7 +28,7 @@ class MetroController < ApplicationController
   def bus_stops    
     unless CACHE.exists?("busstops-#{params[:RouteID]}")
       response = fetch_data(BUS_ROUTE_SCHEDULE_URL, nil)
-      CACHE.set("busstops-#{params["RouteID"]}", response, {ex: ONE_WEEK})
+      CACHE.setex("busstops-#{params["RouteID"]}", ONE_WEEK, response)
     end
 
     render json: {:alerts => CACHE.lrange("alert-#{params[:RouteID]}", 0, -1), :bus => JSON.parse(CACHE.get("busstops-#{params[:RouteID]}")) }.to_json
@@ -37,7 +37,7 @@ class MetroController < ApplicationController
   def bus_stop
     unless CACHE.exists?("stop-#{params[:StopId]}")
       response = fetch_data(BUS_PREDICTIONS_URL, nil)
-      CACHE.set("stop-#{params[:StopId]}", response, {ex: QUARTER_MINUTE})
+      CACHE.setex("stop-#{params[:StopId]}", QUARTER_MINUTE, response)
     end
 
     render json: { 
@@ -48,7 +48,7 @@ class MetroController < ApplicationController
   def bus_route_list
     unless CACHE.exists?('allBuses')
       response = fetch_data(BUS_ROUTES_URL, nil)
-      CACHE.set('allBuses', response, {ex: ONE_WEEK})
+      CACHE.setex('allBuses', ONE_WEEK, response)
     end
     
     render json: CACHE.get('allBuses')
@@ -69,7 +69,7 @@ class MetroController < ApplicationController
 
     if params[:Linecode]
       unless CACHE.exists?("#{params[:Linecode]}-stations")
-        CACHE.set("#{params[:Linecode]}-stations", sorted_json_response_from_wmata, {ex: ONE_WEEK})
+        CACHE.setex("#{params[:Linecode]}-stations", ONE_WEEK, sorted_json_response_from_wmata)
       end
 
       render json: { 
@@ -79,7 +79,7 @@ class MetroController < ApplicationController
     
     else
       unless CACHE.exists?('allStations')
-        CACHE.set('allStations', sorted_json_response_from_wmata, {ex: ONE_WEEK})
+        CACHE.setex('allStations', ONE_WEEK, sorted_json_response_from_wmata)
       end
 
       render json: CACHE.get('allStations')
@@ -89,7 +89,7 @@ class MetroController < ApplicationController
   def station
     unless CACHE.exists?("station-#{params[:station_code]}")
       response = fetch_data("#{STATION_PREDICTIONS_URL}/#{params[:station_code]}", nil)
-      CACHE.set("station-#{params[:station_code]}", response, {ex: THIRD_MINUTE})
+      CACHE.setex("station-#{params[:station_code]}", THIRD_MINUTE, response)
     end
 
     render json: CACHE.get("station-#{params[:station_code]}")
@@ -98,7 +98,7 @@ class MetroController < ApplicationController
   def lines
     unless CACHE.exists?("lines")
       response = fetch_data(RAIL_LINES_URL, nil)
-      CACHE.set('lines', response, {ex: ONE_WEEK})
+      CACHE.setex('lines', ONE_WEEK, response)
     end
 
     render json: CACHE.get('lines')
@@ -127,7 +127,7 @@ class MetroController < ApplicationController
         end
       end
 
-      CACHE.set('alert-times', true, ex: TEN_MINUTES)
+      CACHE.setex('alert-times', TEN_MINUTES, true)
       render json: bus_feed
     end
   end
