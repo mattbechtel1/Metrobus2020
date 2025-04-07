@@ -18,9 +18,6 @@ function buildHeader(stopId, searchCode, agency) {
     favoriteHeart.dataset.stop = searchCode || stopId
     favoriteHeart.dataset.description = stopId
     favoriteHeart.dataset.stopType = searchCode ? 'train' : 'bus'
-    if (favoriteHeart.dataset.stopType === 'bus' && agency === 'circulator') {
-        favoriteHeart.dataset.stopType = 'circulator'
-    }
     favoriteHeart.addEventListener('click', addFavorite)
     
     let refresh 
@@ -32,17 +29,6 @@ function buildHeader(stopId, searchCode, agency) {
                 .then(response => response.json())
                 .then(data => {
                     checkForBuses(data.stop, stopId)
-                    clearAndReturnNotification()
-                })
-                .catch(displayError)
-            })
-        } else if (agency === 'circulator') {
-            refresh = createRefresh(function() {
-                loaderNotification(`Refreshing the schedule for stop #${stopId}`)
-                fetch(`${baseUrl}/circulator/busstop/${stopId}`)
-                .then(response => response.json())
-                .then(data => {
-                    getCirculatorBuses(data.body.predictions, stopId)
                     clearAndReturnNotification()
                 })
                 .catch(displayError)

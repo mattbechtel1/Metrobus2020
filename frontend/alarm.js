@@ -45,14 +45,12 @@ function setAlarm(event, stopId, tripId, agency) {
     function myBus(busPredictions) {
         switch(agency) {
             case 'metro': return busPredictions.find(bus => bus.TripID === tripId)
-            case 'circulator': return busPredictions.find(bus => bus.tripTag === tripId)
         }
     }
 
     function myBusMinutes(predictions) {
         switch(agency) {
             case 'metro': return predictions.Minutes
-            case 'circulator': return predictions.minutes
         }
     }
 
@@ -75,7 +73,6 @@ function setAlarm(event, stopId, tripId, agency) {
     function getUrl() {
         switch(agency) {
             case 'metro': return `${baseUrl}/metro/busstop/${stopId}`;
-            case 'circulator': return `${baseUrl}/circulator/busstop/${stopId}`
         }
     }
 
@@ -90,16 +87,6 @@ function setAlarm(event, stopId, tripId, agency) {
                     getBuses(data.stop, stopId)
                     return
                 }
-            case 'circulator':
-                if (data.error) {
-                    displayError(data.error)
-                    return
-                } else {
-                    checkAlarm(data.body.predictions.direction.prediction)
-                    getCirculatorBuses(data.body.predictions, stopId)
-                    return
-                }
-
         }
     }
     

@@ -100,8 +100,6 @@ function routeSearch(event, format = 'metro') {
             case 'metro': 
                 query = query.toUpperCase()
                 return `${baseUrl}/metro/busstops/?RouteID=${query}&IncludingVariations=true`
-            case 'circulator':
-                return `${baseUrl}/circulator/busstops/${query}`
             default: 
                 errorNotification("Unrecognized Agency")
                 throw "Unrecognized agency"
@@ -124,10 +122,6 @@ function routeSearch(event, format = 'metro') {
                     loaderNotification(...data.alerts)
                     break;
                 }
-            case 'circulator':
-                clearAndReturnNotification()
-                displayCirculatorStops(data.body.route)
-                break;
         }
     }
 
@@ -216,19 +210,9 @@ function getRoutes(routeList, format = 'metro') {
         select.appendChild(option)
     }
 
-    function circulatorRoute(route) {
-        const option = document.createElement('option')
-        const routeTag = route.tag
-        option.value = routeTag
-        option.innerText = route.title
-
-        select.appendChild(option)
-    }
-
     function buildRoute(route) {
         switch(format) {
             case 'metro': metroRoute(route); break;
-            case 'circulator': circulatorRoute(route); break
         }
     }
     

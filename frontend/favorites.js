@@ -78,18 +78,6 @@ function addFavorite(e) {
                     .catch(displayError)
                 })
                 break
-            case 'circulator':
-                stopNum.addEventListener('click', (e) => {
-                    loaderNotification(`Getting the schedule for ${fav.description}`)
-
-                    fetch(`${baseUrl}/circulator/busstop/${fav.lookup}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        clearAndReturnNotification()
-                        getCirculatorBuses(data.body.predictions, fav.lookup)
-                    })
-                })
-                break
         }
             
         const editFigure = document.createElement('a')
