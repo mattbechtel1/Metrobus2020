@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const favLink = document.getElementById('favorites')
     favLink.style.display = 'none'
     favLink.addEventListener('click', () => displayFavorites(userHeldInState.favorites))
+
+    document.querySelector('#locale').addEventListener("change", function(event){
+        changeCity(event.target.value)
+    })
 })
 
 function popUpSearch(searchFunction, placeholderText) {

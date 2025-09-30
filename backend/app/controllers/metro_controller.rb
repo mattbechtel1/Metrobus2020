@@ -26,32 +26,32 @@ class MetroController < ApplicationController
   STATION_PREDICTIONS_URL = 'https://api.wmata.com/StationPrediction.svc/json/GetPrediction'
 
   def bus_stops    
-    unless CACHE.exists?("busstops-#{params[:RouteID]}")
+    unless CACHE.exists?("dc-busstops-#{params[:RouteID]}")
       response = fetch_data(BUS_ROUTE_SCHEDULE_URL, nil)
-      CACHE.setex("busstops-#{params["RouteID"]}", ONE_WEEK, response)
+      CACHE.setex("dc-busstops-#{params["RouteID"]}", ONE_WEEK, response)
     end
 
-    render json: {:alerts => CACHE.lrange("alert-#{params[:RouteID]}", 0, -1), :bus => JSON.parse(CACHE.get("busstops-#{params[:RouteID]}")) }.to_json
+    render json: {:alerts => CACHE.lrange("dc-alert-#{params[:RouteID]}", 0, -1), :bus => JSON.parse(CACHE.get("dc-busstops-#{params[:RouteID]}")) }.to_json
   end
 
   def bus_stop
-    unless CACHE.exists?("stop-#{params[:StopId]}")
+    unless CACHE.exists?("dc-stop-#{params[:StopId]}")
       response = fetch_data(BUS_PREDICTIONS_URL, nil)
-      CACHE.setex("stop-#{params[:StopId]}", QUARTER_MINUTE, response)
+      CACHE.setex("dc-stop-#{params[:StopId]}", QUARTER_MINUTE, response)
     end
 
     render json: { 
-      :alerts => CACHE.lrange("alert-#{params[:routeId]}", 0, -1),
-      :stop => JSON.parse(CACHE.get("stop-#{params[:StopId]}")) }.to_json
+      :alerts => CACHE.lrange("dc-alert-#{params[:routeId]}", 0, -1),
+      :stop => JSON.parse(CACHE.get("dc-stop-#{params[:StopId]}")) }.to_json
   end
 
   def bus_route_list
-    unless CACHE.exists?('allBuses')
+    unless CACHE.exists?('dc-allBuses')
       response = fetch_data(BUS_ROUTES_URL, nil)
-      CACHE.setex('allBuses', ONE_WEEK, response)
+      CACHE.setex('dc-allBuses', ONE_WEEK, response)
     end
     
-    render json: CACHE.get('allBuses')
+    render json: CACHE.get('dc-allBuses')
   end
 
   def stations
@@ -68,53 +68,53 @@ class MetroController < ApplicationController
 
 
     if params[:Linecode]
-      unless CACHE.exists?("#{params[:Linecode]}-stations")
-        CACHE.setex("#{params[:Linecode]}-stations", ONE_WEEK, sorted_json_response_from_wmata)
+      unless CACHE.exists?("dc-#{params[:Linecode]}-stations")
+        CACHE.setex("dc-#{params[:Linecode]}-stations", ONE_WEEK, sorted_json_response_from_wmata)
       end
 
       render json: { 
-        :alerts => CACHE.lrange("alert-#{COLOR_DICT[params[:Linecode]]}", 0, -1), 
-        :stations => JSON.parse(CACHE.get("#{params[:Linecode]}-stations"))
+        :alerts => CACHE.lrange("dc-alert-#{COLOR_DICT[params[:Linecode]]}", 0, -1), 
+        :stations => JSON.parse(CACHE.get("dc-#{params[:Linecode]}-stations"))
       }.to_json
     
     else
-      unless CACHE.exists?('allStations')
-        CACHE.setex('allStations', ONE_WEEK, sorted_json_response_from_wmata)
+      unless CACHE.exists?('dc-allStations')
+        CACHE.setex('dc-allStations', ONE_WEEK, sorted_json_response_from_wmata)
       end
 
-      render json: CACHE.get('allStations')
+      render json: CACHE.get('dc-allStations')
     end
   end
 
   def station
-    unless CACHE.exists?("station-#{params[:station_code]}")
+    unless CACHE.exists?("dc-station-#{params[:station_code]}")
       response = fetch_data("#{STATION_PREDICTIONS_URL}/#{params[:station_code]}", nil)
-      CACHE.setex("station-#{params[:station_code]}", THIRD_MINUTE, response)
+      CACHE.setex("dc-station-#{params[:station_code]}", THIRD_MINUTE, response)
     end
 
-    render json: CACHE.get("station-#{params[:station_code]}")
+    render json: CACHE.get("dc-station-#{params[:station_code]}")
   end
 
   def lines
-    unless CACHE.exists?("lines")
+    unless CACHE.exists?("dc-lines")
       response = fetch_data(RAIL_LINES_URL, nil)
-      CACHE.setex('lines', ONE_WEEK, response)
+      CACHE.setex('dc-lines', ONE_WEEK, response)
     end
 
-    render json: CACHE.get('lines')
+    render json: CACHE.get('dc-lines')
   end
 
 
   # alerts does not return data to the frontend
   def alerts
-    unless CACHE.get('alert-times')
+    unless CACHE.get('dc-alert-times')
       bus_response = fetch_data(BUS_ALERTS_URL, "{body}")
       bus_feed = Transit_realtime::FeedMessage.decode(bus_response)
       
       bus_feed.entity.filter { |entity| entity.id[0] == "1" }.each do |entity|
         entity.alert.informed_entity.each do |bus|
-          CACHE.rpush("alert-#{bus.route_id}", entity.alert.header_text.translation[0].text)
-          CACHE.expire("alert-#{bus.route_id}", TEN_MINUTES)
+          CACHE.rpush("dc-alert-#{bus.route_id}", entity.alert.header_text.translation[0].text)
+          CACHE.expire("dc-alert-#{bus.route_id}", TEN_MINUTES)
         end
       end
 
@@ -122,12 +122,12 @@ class MetroController < ApplicationController
       train_feed = Transit_realtime::FeedMessage.decode(train_response)
       train_feed.entity.each do |entity|
         entity.alert.informed_entity.each do |alert|
-          CACHE.rpush("alert-#{alert.route_id}", entity.alert.description_text.translation[0].text)
-          CACHE.expire("alert-#{alert.route_id}", TEN_MINUTES)
+          CACHE.rpush("dc-alert-#{alert.route_id}", entity.alert.description_text.translation[0].text)
+          CACHE.expire("dc-alert-#{alert.route_id}", TEN_MINUTES)
         end
       end
 
-      CACHE.setex('alert-times', TEN_MINUTES, true)
+      CACHE.setex('dc-alert-times', TEN_MINUTES, true)
       render json: bus_feed
     end
   end
