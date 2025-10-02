@@ -146,3 +146,12 @@ function createNewUser(e) {
         }
     })
 }
+
+function logout() {
+    if (userHeldInState) {
+        loaderNotification("Logging out: " + userHeldInState.email)
+    }
+    userHeldInState = null
+    favLink.style.display = 'none'
+    clearAndReturnNotification()
+}

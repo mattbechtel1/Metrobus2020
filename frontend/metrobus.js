@@ -5,7 +5,7 @@ const lostSound = new Audio('./assets/259172__xtrgamr__uhoh.wav');
 document.addEventListener('DOMContentLoaded', function() {
     fetch(`${baseUrl}/metro/alerts`) // puts metro alerts into cache
 
-    document.getElementById('search-by-stop').addEventListener('click', () => popUpSearch(stopSearch, 'Enter 7-digit stop #'));
+    document.getElementById('search-by-stop').addEventListener('click', () => popUpSearch(stopSearch, 'Enter stop #'));
     document.getElementById('search-by-route').addEventListener('click', function() {
         popUpSearch(routeSearch, 'Enter bus route #');
         
@@ -64,14 +64,7 @@ function stopSearch(event) {
     
     let form = document.getElementById('search-form')
     const busStop = form.queryData.value.toString();
-    let stopId;
-
-    if (busStop.length !== 7 ) {
-        errorNotification('Invalid stop number')
-        return
-    } else {
-        stopId = busStop;
-    }
+    let stopId = busStop;
     
     loaderNotification("Getting bus schedule for your stop...")
 

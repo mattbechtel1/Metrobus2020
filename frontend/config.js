@@ -61,4 +61,5 @@ function changeCityName(city) {
 function changeCity(city) {
   changeBaseUrl(city)
   changeCityName(city)
+  logout()
 }
