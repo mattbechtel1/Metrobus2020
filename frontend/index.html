@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <link rel="stylesheet" href="assets/custom.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <title>DC Metrobus 2020</title>
+    <title>MultiCity Metrobus Predictor</title>
   </head>
   <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -33,6 +33,12 @@
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
             </a> -->
+
+          <select id="locale", class="navbar-select">
+            <option selected disabled hidden>Select Metro Area</option>
+            <option value="washington">Washington, DC</option>
+            <option value="seattle">Seattle, WA</option>
+          </select>
         </div>
       </nav>
 
@@ -40,7 +46,8 @@
       
       <section class="section">
           <div class="container">
-              <h1 class="title">DC Metrobus 2020 App</h1>
+              <h1 class="title", id="app_header">My City Metrobus App</h1>
+              <div id="url"></div>
             </div>
         </section>
         

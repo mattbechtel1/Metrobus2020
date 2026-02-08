@@ -45,6 +45,9 @@ function listStations(stations) {
         fetch(`${baseUrl}/metro/station/${e.target.opt.value.split(',')[0]}`)
         .then(response => response.json())
         .then(data => {
+            if (data.error) {
+                return displayError(data.message)
+            }
             displayTrains(data.Trains, e.target.opt.value.split(',')[1], e.target.opt.value.split(',')[0])
             clearAndReturnNotification()
         })

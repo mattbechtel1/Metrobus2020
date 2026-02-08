@@ -39,3 +39,7 @@
 .right-side-header {
     float: right;
 }
+
+.navbar-select {
+    margin: 40px;
+}
