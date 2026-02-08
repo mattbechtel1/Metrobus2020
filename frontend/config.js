@@ -1,4 +1,3 @@
-
 const ua = window.navigator.userAgent
 if (!!ua.match(/Trident/) || !!ua.match(/Edge/) || !!ua.match(/MSIE/)) {
   alert("MetroBus 2020 utilizes technology that is not currently compatible with Internet Explorer. Please consider switching to a modern browser.");
@@ -21,13 +20,9 @@ function clearAndReturnMain() {
   return mainContainer
 }
 
-
-// const dcUrl = 'http://localhost:3000'
-// const seattleUrl = 'http://localhost:3001'
+const seattleUrl = SEATTLE_URL
+const dcUrl = DC_URL
 let baseUrl = dcUrl
-
-const dcUrl = 'https://dc-metrobus-2020-api.herokuapp.com'
-const seattleUrl = 'https://seattle-metrobus-2020-api-001c64bebff0.herokuapp.com/'
 
 function changeBaseUrl(city) {
   function getBaseUrl(city) {
@@ -52,10 +47,6 @@ function changeCityName(city) {
   }
 
   document.getElementById("app_header").innerText = getCityName(city) + " Metrobus App"
-  debug_url = document.getElementById("url")
-  if (debug_url) {
-    debug_url.innerText = baseUrl
-  }
 }
 
 function changeCity(city) {
