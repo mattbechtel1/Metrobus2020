@@ -48,6 +48,7 @@ function listStations(stations) {
             if (data.error) {
                 return displayError(data.message)
             }
+            loaderNotification(...data.alerts)
             displayTrains(data.Trains, e.target.opt.value.split(',')[1], e.target.opt.value.split(',')[0])
             clearAndReturnNotification()
         })

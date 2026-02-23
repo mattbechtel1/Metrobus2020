@@ -24,6 +24,11 @@ const seattleUrl = SEATTLE_URL
 const dcUrl = DC_URL
 let baseUrl = dcUrl
 
+const all_urls = [
+  seattleUrl,
+  dcUrl
+]
+
 function changeBaseUrl(city) {
   function getBaseUrl(city) {
     switch(city) {
