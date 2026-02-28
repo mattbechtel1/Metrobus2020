@@ -97,7 +97,7 @@ function routeSearch(event, format = 'metro') {
     const form = event.currentTarget
     let query = form.queryData.value.toString()
     
-    if (query.length > 4 && format == 'metro') {
+    if (baseUrl == 'washington' && query.length > 4 && format == 'metro') {
         errorNotification('Invalid route');
         return;
     }
