@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  url: MyString
   description: MyString
+  transit_type: bus
+  lookup: MyLookup1
+  permanent_desc: MyPermanentDesc
   user: one
 
 two:
-  url: MyString
   description: MyString
+  transit_type: rail
+  lookup: MyLookup2
+  permanent_desc: MyPermanentDesc
   user: two
