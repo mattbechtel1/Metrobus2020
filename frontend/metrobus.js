@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`${url}/metro/alerts`) // puts metro alerts into cache
     })
 
-    document.getElementById('search-by-stop').addEventListener('click', () => popUpSearch(stopSearch, 'Enter 7-digit stop #'));
+    document.getElementById('search-by-stop').addEventListener('click', () => popUpSearch(stopSearch, 'Enter stop #'));
     document.getElementById('search-by-route').addEventListener('click', function() {
         popUpSearch(routeSearch, 'Enter bus route #');
         
