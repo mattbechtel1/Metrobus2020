@@ -69,7 +69,7 @@ function stopSearch(event) {
     const busStop = form.queryData.value.toString();
     let stopId;
 
-    if (busStop.length !== 7 ) {
+    if (busStop.length === 0 ) {
         errorNotification('Invalid stop number')
         return
     } else {
