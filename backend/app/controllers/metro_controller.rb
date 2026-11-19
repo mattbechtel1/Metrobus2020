@@ -92,7 +92,11 @@ class MetroController < ApplicationController
       CACHE.setex("dc-station-#{params[:station_code]}", THIRD_MINUTE, response)
     end
 
-    render json: CACHE.get("dc-station-#{params[:station_code]}")
+    predictions = JSON.parse(CACHE.get("dc-station-#{params[:station_code]}"))
+    lines = Array(predictions["Trains"]).map { |train| COLOR_DICT[train["Line"]] }.compact.uniq
+    alerts = lines.flat_map { |line| CACHE.lrange("dc-alert-#{line}", 0, -1) }.uniq
+
+    render json: predictions.merge("alerts" => alerts).to_json
   end
 
   def lines

@@ -126,7 +126,7 @@ function routeSearch(event, format = 'metro') {
                 } else {
                     clearAndReturnNotification()
                     displaySchedule(data.bus)
-                    loaderNotification(...data.alerts)
+                    loaderNotification(...(data.alerts || []))
                     break;
                 }
         }
@@ -329,7 +329,7 @@ function listRouteStops(event, schedule) {
                     displayError(data.stop.Message)
                 } else {
                     clearAndReturnNotification()
-                    loaderNotification(...data.alerts)
+                    loaderNotification(...(data.alerts || []))
                     checkForBuses(data.stop, stopTime.StopID)
                 }
             }) 

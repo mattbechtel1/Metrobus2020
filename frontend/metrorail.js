@@ -48,7 +48,7 @@ function listStations(stations) {
             if (data.error) {
                 return displayError(data.message)
             }
-            loaderNotification(...data.alerts)
+            loaderNotification(...(data.alerts || []))
             displayTrains(data.Trains, e.target.opt.value.split(',')[1], e.target.opt.value.split(',')[0])
             clearAndReturnNotification()
         })
@@ -82,7 +82,7 @@ function lineSearch(event) {
     fetch(`${baseUrl}/metro/stations?Linecode=${event.target.opt.value}`)
     .then(response => response.json())
     .then(data => {
-        loaderNotification(...data.alerts)
+        loaderNotification(...(data.alerts || []))
         listStations(data.stations)
     })
     .catch(displayError)
